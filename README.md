@@ -1,88 +1,85 @@
 # 📚 Book Catalogue API
 
-A Dockerized PHP + MySQL REST API with a simple frontend UI for managing books.
+A Dockerized PHP + MySQL application with a simple frontend UI for managing books.
 
-Built as a multi-container application using Docker Compose.
-
----
-
-## 🚀 Features
-
-- Add new books
-- View all books
-- Delete books
-- Persistent MySQL storage
-- Dockerized architecture
-- RESTful API design
-- Clean UI with dynamic rendering
+This project demonstrates:
+- Dockerfile usage
+- Docker Compose multi-container setup
+- Persistent MySQL volume
+- REST API design
+- Frontend + Backend integration
 
 ---
 
-## 🏗 Architecture
+# 🖥 Prerequisites
 
-Browser
-↓
-Apache (PHP Container)
-↓
-MySQL Container
-↓
-Docker Volume (Persistent Storage)
+You must have:
 
-
-### Containers
-
-- `app` → PHP 8.3 + Apache
-- `db` → MySQL 8.0
-- `db_data` → Named Docker volume
+- Git
+- Docker
+- Docker Compose (included with modern Docker)
 
 ---
 
-## 🐳 Docker Setup
+# 🐳 Install Docker
 
-### Build and Run
+## Ubuntu
 
 ```bash
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl start docker
+sudo systemctl enable docker
+
+## **Verify installation:**
+
+docker --version
+
+docker compose version
+
+## **If not available:**
+
+sudo apt install docker-compose -y
+
+📥 Clone the Repository
+git clone https://github.com/vishnu080292/book-catalogue.git
+cd book-catalogue
+
+## 🚀 Build and Run the Application
+
+## From inside the project directory:
+
 docker compose up --build
 
-
-Access app:
-
+## 🌐 Access the Application
 http://localhost:8080/home.html
 
-Stop Containers
+🔁 Rebuild After Code Changes
+
+##If you modify:
+
+## Dockerfile
+##PHP files
+##HTML files
+
+##Run:
+
 docker compose down
+docker compose up --build
 
-Stop and Remove Database Data
-docker compose down -v
+#Docker Image (Manual Build)
+docker build -t book-catalogue .
+##Run container manually
+docker run -p 8080:80 book-catalogue
+📂 Project Structure
+book-catalogue/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── index.php
+├── db.php
+├── home.html
+├── .htaccess
+├── .gitignore
+└── README.md
 
-📦 API Endpoints
-Health Check
-GET /health
-
-
-Response:
-
-{ "status": "ok" }
-
-Get All Books
-GET /books
-
-Add Book
-POST /books
-
-
-Body:
-
-{
-  "title": "Clean Code",
-  "author": "Robert C. Martin"
-}
-
-Delete Book
-DELETE /books/{id}
-
-💾 Persistence
-
-Database data is stored using a Docker named volume:
-
-db_data
