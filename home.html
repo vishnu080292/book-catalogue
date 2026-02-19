@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Book Catalogue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4e73df, #1cc88a);
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: #4e73df;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #e74a3b;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #f8f9fc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📚 Book Catalogue</h1>
+
+    <input type="text" id="title" placeholder="Title">
+    <input type="text" id="author" placeholder="Author">
+    <button class="add-btn" onclick="addBook()">Add Book</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Created Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="bookTable"></tbody>
+    </table>
+</div>
+
+<script>
+async function loadBooks() {
+    const res = await fetch('/books');
+    const books = await res.json();
+
+    const table = document.getElementById('bookTable');
+    table.innerHTML = '';
+
+    books.forEach((book, index) => {
+        const row = `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.created_at}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteBook(${book.id})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+        table.innerHTML += row;
+    });
+}
+
+async function addBook() {
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+
+    await fetch('/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, author })
+    });
+
+    document.getElementById('title').value = '';
+    document.getElementById('author').value = '';
+
+    loadBooks();
+}
+
+async function deleteBook(id) {
+    await fetch('/books/' + id, {
+        method: 'DELETE'
+    });
+
+    loadBooks();
+}
+
+loadBooks();
+</script>
+
+</body>
+</html>
+
